@@ -1,14 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Heavy Metal Pollution Index (HMPI) Calculator</title>
+    <title>Interactive HMPI Calculator</title>
+
     <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 </head>
 <body>
     <div class="app-container">
-         Header 
         <header class="header">
             <div class="header-content">
                 <div class="title-section">
@@ -25,10 +30,8 @@
                 </div>
             </div>
         </header>
-
-         Main Content 
         <main class="main-content">
-             Input Section 
+            
             <section class="input-section">
                 <div class="section-header">
                     <h2>Data Input</h2>
@@ -38,7 +41,7 @@
                     </div>
                 </div>
 
-                 Manual Input Tab 
+                
                 <div id="manual-tab" class="tab-content active">
                     <form id="manual-form" class="manual-form">
                         <div class="form-grid">
@@ -48,11 +51,11 @@
                             </div>
                             <div class="form-group">
                                 <label for="latitude">Latitude</label>
-                                <input type="number" id="latitude" name="latitude" step="any" placeholder="e.g., 40.7128">
+                                <input type="number" id="latitude" name="latitude" step="any" placeholder="e.g., 28.6139">
                             </div>
                             <div class="form-group">
                                 <label for="longitude">Longitude</label>
-                                <input type="number" id="longitude" name="longitude" step="any" placeholder="e.g., -74.0060">
+                                <input type="number" id="longitude" name="longitude" step="any" placeholder="e.g., 77.2090">
                             </div>
                         </div>
 
@@ -110,7 +113,7 @@
                     </form>
                 </div>
 
-                 File Upload Tab 
+                
                 <div id="file-tab" class="tab-content">
                     <div class="file-upload-area">
                         <div class="upload-zone" id="upload-zone">
@@ -131,7 +134,7 @@
                 </div>
             </section>
 
-             Dashboard Section 
+                
             <section class="dashboard-section">
                 <div class="section-header">
                     <h2>Analysis Dashboard</h2>
@@ -146,7 +149,6 @@
                     </div>
                 </div>
 
-                 Summary Cards 
                 <div class="summary-cards">
                     <div class="summary-card">
                         <div class="card-icon safe">✓</div>
@@ -163,7 +165,7 @@
                         </div>
                     </div>
                     <div class="summary-card">
-                        <div class="card-icon hazardous">⚠</div>
+                        <div class="card-icon hazardous">!</div>
                         <div class="card-content">
                             <h3 id="hazardous-count">0</h3>
                             <p>Hazardous</p>
@@ -178,27 +180,26 @@
                     </div>
                 </div>
 
-                 Charts Section 
                 <div class="charts-section">
                     <div class="chart-container">
                         <h3>HMPI Distribution</h3>
-                        <canvas id="hmpi-chart" width="400" height="300"></canvas>
+                        <canvas id="hmpi-chart"></canvas>
                     </div>
                     <div class="chart-container">
-                        <h3>Metal Concentrations</h3>
-                        <canvas id="metals-chart" width="400" height="300"></canvas>
+                        <h3>Average Metal Concentrations</h3>
+                        <canvas id="metals-chart"></canvas>
                     </div>
                 </div>
 
-                 Map Section 
+                
                 <div class="map-section">
                     <h3>Sample Locations</h3>
                     <div class="map-container">
-                        <canvas id="location-map" width="800" height="400"></canvas>
+                        <div id="location-map"></div>
                     </div>
                 </div>
 
-                 Results Table 
+                
                 <div class="results-section">
                     <h3>Detailed Results</h3>
                     <div class="table-container">
@@ -214,8 +215,7 @@
                                 </tr>
                             </thead>
                             <tbody id="results-tbody">
-                                 Results will be populated here 
-                            </tbody>
+                                </tbody>
                         </table>
                     </div>
                 </div>
@@ -223,7 +223,6 @@
         </main>
     </div>
 
-     Help Modal 
     <div id="help-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -233,14 +232,12 @@
             <div class="modal-body">
                 <h3>What is HMPI?</h3>
                 <p>The Heavy Metal Pollution Index (HMPI) is a comprehensive tool for assessing groundwater quality based on heavy metal concentrations.</p>
-                
                 <h3>HMPI Categories:</h3>
                 <ul>
                     <li><strong>Safe (HMPI ≤ 100):</strong> Water is suitable for drinking</li>
                     <li><strong>Moderate (100 < HMPI ≤ 200):</strong> Water requires treatment</li>
                     <li><strong>Hazardous (HMPI > 200):</strong> Water is unsuitable for consumption</li>
                 </ul>
-
                 <h3>How to Use:</h3>
                 <ol>
                     <li>Enter metal concentrations manually or upload a data file</li>
@@ -252,32 +249,26 @@
         </div>
     </div>
 
-     Metal Info Modal 
     <div id="metal-info-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="metal-name">Metal Information</h2>
                 <button class="modal-close">&times;</button>
             </div>
-            <div class="modal-body" id="metal-info-content">
-                 Metal information will be populated here 
-            </div>
+            <div class="modal-body" id="metal-info-content"></div>
         </div>
     </div>
 
-     Loading Overlay 
     <div id="loading-overlay" class="loading-overlay hidden">
         <div class="loading-spinner"></div>
         <p>Processing data...</p>
     </div>
 
-     Error Toast 
     <div id="error-toast" class="toast error hidden">
         <span id="error-message"></span>
         <button class="toast-close">&times;</button>
     </div>
 
-     Success Toast 
     <div id="success-toast" class="toast success hidden">
         <span id="success-message"></span>
         <button class="toast-close">&times;</button>
